@@ -1,34 +1,48 @@
-import React, { createContext, useMemo, useState, useContext } from "react";
+import React, {
+  createContext,
+  useMemo,
+  useState,
+  useContext,
+  ReactNode,
+} from "react";
 import noop from "lodash/noop";
 
 type MenuIds = "first" | "second" | "last";
 type Menu = { id: MenuIds; title: string };
 
-type MenuSelected = { selectedMenu: { id?: MenuIds } };
-type MenuAction = {
-  onSelectedMenu: React.Dispatch<
-    React.SetStateAction<MenuSelected["selectedMenu"]>
-  >;
+type SelectedMenu = {
+  id: MenuIds;
 };
 
+type MenuSelected = {
+  selectedMenu: SelectedMenu;
+};
+
+type MenuAction = {
+  onSelectedMenu: (selected: SelectedMenu) => void;
+};
+
+// Додати тип Menu Selected
+
 const MenuSelectedContext = createContext<MenuSelected>({
-  selectedMenu: {},
+  selectedMenu: { id: "first" },
 });
+
+// Додайте тип MenuAction
 
 const MenuActionContext = createContext<MenuAction>({
   onSelectedMenu: noop,
 });
 
 type PropsProvider = {
-  children: React.ReactNode;
-};
-
-type SelectedMenu = {
-  id: MenuIds;
+  children: ReactNode; // Додати тип для children
 };
 
 function MenuProvider({ children }: PropsProvider) {
-  const [selectedMenu, setSelectedMenu] = useState<SelectedMenu>({});
+  // Додати тип для SelectedMenu він повинен містити { id }
+  const [selectedMenu, setSelectedMenu] = useState<SelectedMenu>({
+    id: "first",
+  });
 
   const menuContextAction = useMemo(
     () => ({
@@ -54,7 +68,7 @@ function MenuProvider({ children }: PropsProvider) {
 }
 
 type PropsMenu = {
-  menus: Menu[];
+  menus: Menu[]; // Додайте вірний тип для меню
 };
 
 function MenuComponent({ menus }: PropsMenu) {
